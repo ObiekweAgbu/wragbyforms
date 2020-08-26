@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Python app to Azure Web App - wragbyforms
+name: Build and deploy Node.js app to Azure Web App - wragbyforms
 
 on:
   push:
@@ -15,18 +15,16 @@ jobs:
     steps:
     - uses: actions/checkout@master
 
-    - name: Set up Python version
-      uses: actions/setup-python@v1
+    - name: Set up Node.js version
+      uses: actions/setup-node@v1
       with:
-        python-version: '3.6'
+        node-version: '12.13.0'
 
-    - name: Install Python dependencies
+    - name: npm install, build, and test
       run: |
-        python3 -m venv env
-        source env/bin/activate
-        pip install -r requirements.txt
-    - name: Zip the application files
-      run: zip -r myapp.zip .
+        npm install
+        npm run build --if-present
+        npm run test --if-present
 
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
@@ -34,4 +32,4 @@ jobs:
         app-name: 'wragbyforms'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_c94496ff36a248f68f3ee1d706f5c0cd }}
-        package: './myapp.zip'
+        package: .
